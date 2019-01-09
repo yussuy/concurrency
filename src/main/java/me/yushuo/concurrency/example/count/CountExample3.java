@@ -1,17 +1,16 @@
-package me.yushuo.concurrency.count;
+package me.yushuo.concurrency.example.count;
 
 import lombok.extern.slf4j.Slf4j;
-import me.yushuo.concurrency.annotations.NotThreadSafe;
+import me.yushuo.concurrency.annotations.ThreadSafe;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicInteger;
 
-@NotThreadSafe
+@ThreadSafe
 @Slf4j
-public class CountExample3 {
+public class  CountExample3 {
 
     // 请求总数
     public static int clientTotal = 5000;
@@ -19,7 +18,7 @@ public class CountExample3 {
     // 同时并发执行的线程数
     public static int threadTotal = 200;
 
-    public volatile static int count = 0;
+    public static int count = 0;
 
     public static void main(String[] args) throws Exception {
         ExecutorService executorService = Executors.newCachedThreadPool();
@@ -42,7 +41,7 @@ public class CountExample3 {
         log.info("count:{}", count);
     }
 
-    private static void add() {
+    private synchronized static void add() {
         count++;
     }
 }

@@ -1,12 +1,10 @@
-package me.yushuo.concurrency.atomic;
+package me.yushuo.concurrency.example.atomic;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import me.yushuo.concurrency.annotations.ThreadSafe;
 
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 @Slf4j
 @ThreadSafe

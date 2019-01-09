@@ -1,38 +1,39 @@
-package me.yushuo.concurrency.atomic;
+package me.yushuo.concurrency.example.syncContainer;
 
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import me.yushuo.concurrency.annotations.ThreadSafe;
 
+import java.util.Collections;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.LongAdder;
 
-@ThreadSafe
 @Slf4j
-public class AtomicExample3 {
-
+@ThreadSafe
+public class CollectionExample2 {
     // 请求总数
     public static int clientTotal = 5000;
 
     // 同时并发执行的线程数
     public static int threadTotal = 200;
 
-    public static LongAdder count = new LongAdder();
+    private static Set<Integer> set = Collections.synchronizedSet(Sets.newHashSet());
 
     public static void main(String[] args) throws Exception {
         ExecutorService executorService = Executors.newCachedThreadPool();
         final CountDownLatch countDownLatch = new CountDownLatch(clientTotal);
-        final Semaphore semaphore = new Semaphore(threadTotal);
+        final Semaphore semaphore = new Semaphore(threadTotal);     //信号量：允许最多执行的线程数量（类比高速通道口）
         for (int i = 0; i < clientTotal; i++) {
+            final int count = i;
             executorService.execute(() -> {
                 try {
                     semaphore.acquire();
-                    add();
+                    update(count);
                     semaphore.release();
-                } catch (Exception e) {
+                }catch (Exception e) {
                     log.error("exception", e);
                 }
                 countDownLatch.countDown();
@@ -40,10 +41,10 @@ public class AtomicExample3 {
         }
         countDownLatch.await();
         executorService.shutdown();
-        log.info("count:{}", count);
+        log.info("size:{}", set.size());
     }
 
-    private static void add() {
-        count.add(1);
+    private static void update(int i) {
+        set.add(i);
     }
 }
